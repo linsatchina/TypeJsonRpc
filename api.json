@@ -1,0 +1,80 @@
+{
+  "f1": {
+    "path": "recommend/openmachine",
+    "comment": "开机图片",
+    "param": [],
+    "respon_data": {
+      "type": "object",
+      "key": {
+        "IsUpdate": {
+          "type": "int"
+        },
+        "Image": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "f2": {
+    "path": "products/list",
+    "comment": "注释啊",
+    "method": "post",
+    "param": [
+      "cate",
+      "page",
+      "pagesize",
+      "sort"
+    ],
+    "respon_data": {
+      "type": "object_array",
+      "key": {
+        "BrandData": {
+          "type": "object_array",
+          "key": {
+            "BCount": {
+              "type": "int"
+            },
+            "BId": {
+              "type": "int"
+            },
+            "BName": {
+              "type": "string"
+            },
+            "BPId": {
+              "type": "string"
+            }
+          }
+        },
+        "ProductData": {
+          "type": "object_array",
+          "key": {
+            "PCategoryCode": {
+              "type": "string"
+            },
+            "PCommentCount": {
+              "type": "int"
+            },
+            "PCommentIntegral": {
+              "type": "int"
+            },
+            "PDescriptionUrl": {
+              "type": "string"
+            },
+            "PFavoriteCount": {
+              "type": "int"
+            },
+            "PGoodCommentCount": {
+              "type": "int"
+            },
+            "PId": {
+              "type": "string"
+            },
+            "PImage": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
