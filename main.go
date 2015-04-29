@@ -7,14 +7,12 @@ import (
 	"os"
 )
 
-type ParamType string
-
 const (
-	ParamType_Int         ParamType = "int"
-	ParamType_String                = "string"
-	ParamType_Float                 = "float"
-	ParamType_Object                = "object"
-	ParamType_ObjectArray           = "object_array"
+	ParamType_Int         string = "int"
+	ParamType_String             = "string"
+	ParamType_Float              = "float"
+	ParamType_Object             = "object"
+	ParamType_ObjectArray        = "object_array"
 )
 
 type API struct {
@@ -39,16 +37,16 @@ var sourceComment = `
 `
 
 func buildModel(modelName string, level int, data map[string]interface{}) bool {
-	t := data["type"]
+	_type := data["type"].(string)
 
-	if t == ParamType_Object || t == ParamType_ObjectArray {
-		_key_ := data["key"].(map[string]interface{})
-		for name, vvv := range _key_ {
-			_data_ := vvv.(map[string]interface{})
-			hasChild := buildModel(modelName+"_"+name, level+1, _data_)
-			_type_ := _data_["type"]
+	if _type == ParamType_Object || _type == ParamType_ObjectArray {
+		_key := data["key"].(map[string]interface{})
+		for name, vvv := range _key {
+			_data := vvv.(map[string]interface{})
+			hasChild := buildModel(modelName+"_"+name, level+1, _data)
+			paramType := _data["type"].(string)
 			if hasChild {
-				_type_ = modelName + "_" + name + "*"
+				paramType = modelName + "_" + name
 			}
 
 			if modelArr[level] == nil {
@@ -59,12 +57,8 @@ func buildModel(modelName string, level int, data map[string]interface{}) bool {
 				modelArr[level][modelName] = make(map[string]string)
 			}
 
-			if _type_ == "string" {
-				_type_ = "NSString*"
-			}
-
-			modelIsArray[modelName] = t == ParamType_ObjectArray
-			modelArr[level][modelName][name] = _type_.(string)
+			modelIsArray[modelName] = _type == ParamType_ObjectArray
+			modelArr[level][modelName][name] = paramType
 		}
 		return true
 	}
@@ -92,28 +86,42 @@ func main() {
 	//---------------------- modelArr modelIsArray --> objectice-c code ----------------------
 	var hStr = sourceComment + `#import <Foundation/Foundation.h>` + "\n\n"
 	var mStr = sourceComment + `#import "WebAPI_model.h"` + "\n\n"
-	for i := 9; i >= 0; i-- {
+	for i := len(modelArr) - 1; i >= 0; i-- {
 		m := modelArr[i]
 		for k, v := range m {
 
 			hStr += "@interface " + k + ":NSObject\n"
-			for _name_, _type_ := range v {
-				if modelIsArray[_type_] {
-					hStr += "@property(nonatomic) " + _type_ + "_Array r_" + _name_ + ";\n"
+			for _name_, paramType := range v {
+
+				if paramType == ParamType_String {
+					paramType = "NSString*"
+				} else if paramType == ParamType_Int {
+					paramType = "NSInteger"
+				} else if paramType == ParamType_Float {
+					paramType = "float"
+				} else if modelIsArray[paramType] {
+					paramType = paramType + "_Array*"
 				} else {
-					hStr += "@property(nonatomic) " + _type_ + " r_" + _name_ + ";\n"
+					paramType = paramType + "*"
 				}
+
+				hStr += "@property(nonatomic) " + paramType + " r_" + _name_ + ";\n"
 			}
+			hStr += "+(" + k + "*)createWithDictionary:(NSDictionary*)dic;\n"
 			hStr += "@end\n\n"
 
-			mStr += "@implementation " + k + "\n@end\n\n"
+			mStr += "@implementation " + k + "\n"
+			mStr += "+(" + k + "*)createWithDictionary:(NSDictionary*)dic{}\n"
+			mStr += "@end\n\n"
 
 			if modelIsArray[k] {
 				hStr += "@interface " + k + "_Array:NSMutableArray\n"
+				hStr += "+(" + k + "_Array*)createWithArray:(NSArray*)arr;\n"
 				hStr += "-(" + k + "*)objectAtIndexedSubscript:(NSUInteger)idx;\n"
 				hStr += "@end\n\n"
 
 				mStr += "@implementation " + k + "_Array\n"
+				mStr += "+(" + k + "_Array*)createWithArray:(NSArray*)arr{}\n"
 				mStr += "-(" + k + " *)objectAtIndexedSubscript:(NSUInteger)idx{\n"
 				mStr += "return [super objectAtIndexedSubscript:idx];\n"
 				mStr += "}\n"
