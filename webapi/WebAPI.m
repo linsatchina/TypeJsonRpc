@@ -11,9 +11,27 @@
 	[DJHttp registerErrorCode:status block:block];
 }
 
-+(void)cancelRequest:(id)Id{
-	[DJHttp cancelRequest:Id];
++(void)cancelAllRequestWithId:(id)Id{
+	[DJHttp cancelAllRequestWithId:Id];
 }
+#pragma -mark 开机图片
++(void)f1:(id)Id
+onSuceess:(void(^)(Ret_f1_Array* ret))onSuceess
+onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
+{
+[DJHttp sendRequestWithId:Id
+	method:@"get"
+	path:@"recommend/openmachine"
+	param:@{}
+	onSuceess:^(id data){
+		if(onSuceess){
+			onSuceess([Ret_f1_Array createWith:data]);
+		}
+	}
+	onFailed:onFailed
+];
+}
+
 #pragma -mark 注释啊
 +(void)f2:(id)Id
 cate:(NSString*)cate
@@ -24,30 +42,12 @@ onSuceess:(void(^)(Ret_f2* ret))onSuceess
 onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
 {
 [DJHttp sendRequestWithId:Id
-	method:method
-	path:path
+	method:@"post"
+	path:@"products/list"
 	param:@{@"cate":cate,@"page":page,@"pagesize":pagesize,@"sort":sort,}
 	onSuceess:^(id data){
 		if(onSuceess){
 			onSuceess([Ret_f2 createWith:data]);
-		}
-	}
-	onFailed:onFailed
-];
-}
-
-#pragma -mark 开机图片
-+(void)f1:(id)Id
-onSuceess:(void(^)(Ret_f1_Array* ret))onSuceess
-onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
-{
-[DJHttp sendRequestWithId:Id
-	method:method
-	path:path
-	param:@{}
-	onSuceess:^(id data){
-		if(onSuceess){
-			onSuceess([Ret_f1_Array createWith:data]);
 		}
 	}
 	onFailed:onFailed

@@ -40,6 +40,7 @@ var sourceComment = `
 //array create实现函数
 func getArrayCreateWithSourceStr(_type string) string {
 	return `
+	NSArray *arr=Id;
 	` + _type + `_Array *ret = (` + _type + `_Array*)[[NSMutableArray alloc]init];
 	if(arr==nil || [arr isKindOfClass:[NSArray class]]==NO){
 		return ret;
@@ -51,6 +52,12 @@ func getArrayCreateWithSourceStr(_type string) string {
 	return ret;
 `
 }
+func getType(t string) string {
+	if modelIsArray[t] {
+		return t + `_Array`
+	}
+	return t
+}
 
 //object create实现函数
 func getObjectCreateWithSourceStr(_type string, name_type_map map[string]string) string {
@@ -58,40 +65,41 @@ func getObjectCreateWithSourceStr(_type string, name_type_map map[string]string)
 	var s = ``
 	for name, type_ := range name_type_map {
 		if type_ == ParamType_Float {
-			s += `
+			s += `{
 	NSNumber *n=dic[@"` + name + `"];
 	if(n==nil || [n isKindOfClass:[NSNumber class]]==NO){
 		ret.r_` + name + `=0;
 	}else{
 		ret.r_` + name + `=[n floatValue];
 	}
-			`
+			}`
 		} else if type_ == ParamType_Int {
-			s += `
+			s += `{
 	NSNumber *n=dic[@"` + name + `"];
 	if(n==nil || [n isKindOfClass:[NSNumber class]]==NO){
 		ret.r_` + name + `=0;
 	}else{
-		ret.r_` + name + `=[n intgerValue];
+		ret.r_` + name + `=[n integerValue];
 	}
-			`
+			}`
 		} else if type_ == ParamType_String {
-			s += `
+			s += `{
 	NSString *s=dic[@"` + name + `"];
 	if(s==nil || [s isKindOfClass:[NSString class]]==NO){
 		ret.r_` + name + `=@"";
 	}else{
 		ret.r_` + name + `=s;
 	}
-			`
+			}`
 		} else {
-			s += `
-	ret.r_` + name + `= [` + name + ` createWith:dic[@"` + name + `"]];
-			`
+			s += `{
+	ret.r_` + name + `= [` + getType(type_) + ` createWith:dic[@"` + name + `"]];
+			}`
 		}
 	}
 
 	return `
+	NSDictionary* dic = Id;
 	` + _type + ` *ret = [[` + _type + ` alloc]init];
 	if(dic==nil || [dic isKindOfClass:[NSDictionary class]]==NO){
 		dic = [[NSDictionary alloc]init];
@@ -121,8 +129,8 @@ func getWebApiFuncM(method, path string, paramArr []string, retType string) stri
 	p += "}"
 	var s = `
 [DJHttp sendRequestWithId:Id
-	method:method
-	path:path
+	method:@"` + method + `"
+	path:@"` + path + `"
 	param:` + p + `
 	onSuceess:^(id data){
 		if(onSuceess){
@@ -206,21 +214,21 @@ func main() {
 
 				hStr += "@property(nonatomic) " + paramType + " r_" + _name_ + ";\n"
 			}
-			hStr += "+(" + modelName + "*)createWith:(NSDictionary*)dic;\n"
+			hStr += "+(" + modelName + "*)createWith:(id)Id;\n"
 			hStr += "@end\n\n"
 
 			mStr += "@implementation " + modelName + "\n"
-			mStr += "+(" + modelName + "*)createWith:(NSDictionary*)dic{" + getObjectCreateWithSourceStr(modelName, v) + "}\n"
+			mStr += "+(" + modelName + "*)createWith:(id)Id{" + getObjectCreateWithSourceStr(modelName, v) + "}\n"
 			mStr += "@end\n\n"
 
 			if modelIsArray[modelName] {
 				hStr += "@interface " + modelName + "_Array:NSMutableArray\n"
-				hStr += "+(" + modelName + "_Array*)createWith:(NSArray*)arr;\n"
+				hStr += "+(" + modelName + "_Array*)createWith:(id)Id;\n"
 				hStr += "-(" + modelName + "*)objectAtIndexedSubscript:(NSUInteger)idx;\n"
 				hStr += "@end\n\n"
 
 				mStr += "@implementation " + modelName + "_Array\n"
-				mStr += "+(" + modelName + "_Array*)createWith:(NSArray*)arr{" + getArrayCreateWithSourceStr(modelName) + "}\n"
+				mStr += "+(" + modelName + "_Array*)createWith:(id)Id{" + getArrayCreateWithSourceStr(modelName) + "}\n"
 				mStr += "-(" + modelName + " *)objectAtIndexedSubscript:(NSUInteger)idx{\n"
 				mStr += "	return [super objectAtIndexedSubscript:idx];\n"
 				mStr += "}\n"
@@ -246,11 +254,11 @@ func main() {
 //
 //取消Id发起的所有网络请求
 //回收所有block
-+(void)cancelRequest:(id)Id;
++(void)cancelAllRequestWithId:(id)Id;
 //
 //
 //以下函数
-//Id dealloc 会自动调用 cancelRequest
+//Id dealloc 会自动调用 cancelAllRequestWithId
 //同1个函数调用多次 Id相同的话  会取消上1次的调用 (取消网络请求 回收blcok)`
 
 	var webApiM = sourceComment + `
@@ -263,15 +271,12 @@ func main() {
 	[DJHttp registerErrorCode:status block:block];
 }
 
-+(void)cancelRequest:(id)Id{
-	[DJHttp cancelRequest:Id];
++(void)cancelAllRequestWithId:(id)Id{
+	[DJHttp cancelAllRequestWithId:Id];
 }`
 
 	for funcName, api := range apiList {
-		retType := `Ret_` + funcName
-		if modelIsArray[retType] {
-			retType += `_Array`
-		}
+		retType := getType(`Ret_` + funcName)
 		webApiH += getWebApiFuncH(api.Comment, funcName, api.Param, retType) + ";\n"
 		webApiM += getWebApiFuncH(api.Comment, funcName, api.Param, retType) + "{" + getWebApiFuncM(api.Method, api.Path, api.Param, retType) + "}\n"
 	}
