@@ -1,11 +1,11 @@
 {
-  "f1": {
+  "recommend_openmachine": {
     "path": "recommend/openmachine",
     "comment": "开机图片",
     "param": [],
     "method":"get",
     "respon_data": {
-      "type": "object_array",
+      "type": "object",
       "key": {
         "IsUpdate": {
           "type": "int"
@@ -16,7 +16,7 @@
       }
     }
   },
-  "f2": {
+  "products_list": {
     "path": "products/list",
     "comment": "注释啊",
     "method": "post",

@@ -18,9 +18,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
-    [WebAPI f1:self onSuceess:^(Ret_f1_Array *ret) {
-        NSLog(@"ret=%@",ret);
+    [WebAPI products_list:self cate:@"" page:@"" pagesize:@"" sort:@"" onSuceess:^(Ret_products_list *ret) {
+        NSLog(@"ret.r_BrandData[0].r_BName=%@",ret.r_BrandData[0].r_BName);
     } onFailed:^(enum WebAPIErrorCode errorCode, NSString *msg) {
         NSLog(@"errorCode=%ld msg=%@",errorCode,msg);
     }];
