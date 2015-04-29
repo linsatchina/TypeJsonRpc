@@ -36,6 +36,69 @@ var sourceComment = `
 //source: api.json  main.go
 `
 
+//array create实现函数
+func getArrayCreateWithSourceStr(_type string) string {
+	return `
+	` + _type + `_Array *ret = (` + _type + `_Array*)[[NSMutableArray alloc]init];
+	if(arr==nil || [arr isKindOfClass:[NSArray class]]==NO){
+		return ret;
+	}
+	for(int i=0;i<arr.count;i++){
+	    ` + _type + ` *model = [` + _type + ` createWith:arr[i]];
+		[ret addObject:model];
+	}
+	return ret;
+`
+}
+
+//object create实现函数
+func getObjectCreateWithSourceStr(_type string, name_type_map map[string]string) string {
+
+	var s = ``
+	for name, type_ := range name_type_map {
+		if type_ == ParamType_Float {
+			s += `
+	NSNumber *n=dic[@"` + name + `"];
+	if(n==nil || [n isKindOfClass:[NSNumber class]]==NO){
+		ret.r_` + name + `=0;
+	}else{
+		ret.r_` + name + `=[n floatValue];
+	}
+			`
+		} else if type_ == ParamType_Int {
+			s += `
+	NSNumber *n=dic[@"` + name + `"];
+	if(n==nil || [n isKindOfClass:[NSNumber class]]==NO){
+		ret.r_` + name + `=0;
+	}else{
+		ret.r_` + name + `=[n intgerValue];
+	}
+			`
+		} else if type_ == ParamType_String {
+			s += `
+	NSString *s=dic[@"` + name + `"];
+	if(s==nil || [s isKindOfClass:[NSString class]]==NO){
+		ret.r_` + name + `=@"";
+	}else{
+		ret.r_` + name + `=s;
+	}
+			`
+		} else {
+			s += `
+	ret.r_` + name + `= [` + name + ` createWith:dic[@"` + name + `"]];
+			`
+		}
+	}
+
+	return `
+	` + _type + ` *ret = [[` + _type + ` alloc]init];
+	if(dic==nil || [dic isKindOfClass:[NSDictionary class]]==NO){
+		dic = [[NSDictionary alloc]init];
+	}` + s + `
+	return ret;
+`
+}
+
 func buildModel(modelName string, level int, data map[string]interface{}) bool {
 	_type := data["type"].(string)
 
@@ -88,9 +151,9 @@ func main() {
 	var mStr = sourceComment + `#import "WebAPI_model.h"` + "\n\n"
 	for i := len(modelArr) - 1; i >= 0; i-- {
 		m := modelArr[i]
-		for k, v := range m {
+		for modelName, v := range m {
 
-			hStr += "@interface " + k + ":NSObject\n"
+			hStr += "@interface " + modelName + ":NSObject\n"
 			for _name_, paramType := range v {
 
 				if paramType == ParamType_String {
@@ -107,23 +170,23 @@ func main() {
 
 				hStr += "@property(nonatomic) " + paramType + " r_" + _name_ + ";\n"
 			}
-			hStr += "+(" + k + "*)createWithDictionary:(NSDictionary*)dic;\n"
+			hStr += "+(" + modelName + "*)createWith:(NSDictionary*)dic;\n"
 			hStr += "@end\n\n"
 
-			mStr += "@implementation " + k + "\n"
-			mStr += "+(" + k + "*)createWithDictionary:(NSDictionary*)dic{}\n"
+			mStr += "@implementation " + modelName + "\n"
+			mStr += "+(" + modelName + "*)createWith:(NSDictionary*)dic{" + getObjectCreateWithSourceStr(modelName, v) + "}\n"
 			mStr += "@end\n\n"
 
-			if modelIsArray[k] {
-				hStr += "@interface " + k + "_Array:NSMutableArray\n"
-				hStr += "+(" + k + "_Array*)createWithArray:(NSArray*)arr;\n"
-				hStr += "-(" + k + "*)objectAtIndexedSubscript:(NSUInteger)idx;\n"
+			if modelIsArray[modelName] {
+				hStr += "@interface " + modelName + "_Array:NSMutableArray\n"
+				hStr += "+(" + modelName + "_Array*)createWith:(NSArray*)arr;\n"
+				hStr += "-(" + modelName + "*)objectAtIndexedSubscript:(NSUInteger)idx;\n"
 				hStr += "@end\n\n"
 
-				mStr += "@implementation " + k + "_Array\n"
-				mStr += "+(" + k + "_Array*)createWithArray:(NSArray*)arr{}\n"
-				mStr += "-(" + k + " *)objectAtIndexedSubscript:(NSUInteger)idx{\n"
-				mStr += "return [super objectAtIndexedSubscript:idx];\n"
+				mStr += "@implementation " + modelName + "_Array\n"
+				mStr += "+(" + modelName + "_Array*)createWith:(NSArray*)arr{" + getArrayCreateWithSourceStr(modelName) + "}\n"
+				mStr += "-(" + modelName + " *)objectAtIndexedSubscript:(NSUInteger)idx{\n"
+				mStr += "	return [super objectAtIndexedSubscript:idx];\n"
 				mStr += "}\n"
 				mStr += "@end\n\n"
 			}
