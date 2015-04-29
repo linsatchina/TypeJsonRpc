@@ -146,7 +146,7 @@ func main() {
 	}
 
 	//第3步
-	//---------------------- modelArr modelIsArray --> objectice-c code ----------------------
+	//---------------------- modelArr modelIsArray --> objectice-c model code ----------------------
 	var hStr = sourceComment + `#import <Foundation/Foundation.h>` + "\n\n"
 	var mStr = sourceComment + `#import "WebAPI_model.h"` + "\n\n"
 	for i := len(modelArr) - 1; i >= 0; i-- {
@@ -196,6 +196,45 @@ func main() {
 
 	ioutil.WriteFile("./webapi/WebAPI_model.h", []byte(hStr), os.ModeAppend)
 	ioutil.WriteFile("./webapi/WebAPI_model.m", []byte(mStr), os.ModeAppend)
+
+	//第4步
+	//---------------------- modelArr modelIsArray --> objectice-c webapi code ----------------------
+
+	var webApiH = sourceComment + `
+#import "WebAPI_model.h"
+#import "WebAPIErrorCode.h"
+
+@interface WebAPI : NSObject
+//
++(void)registerErrorCode:(enum WebAPIErrorCode)status block:(void(^)())block;
+//
+//取消Id发起的所有网络请求
+//回收所有block
++(void)cancelRequest:(id)Id;
+//
+//
+//以下函数
+//Id dealloc 会自动调用 cancelRequest
+//同1个函数调用多次 Id相同的话  会取消上1次的调用 (取消网络请求 回收blcok)`
+
+	var webApiM = sourceComment + `
+#import "WebAPI.h"
+#import "DJHttp.h"
+
+@implementation WebAPI
+
++(void)registerErrorCode:(enum WebAPIErrorCode)status block:(void(^)())block{
+	[DJHttp registerErrorCode:status block:block];
+}
+
++(void)cancelRequest:(id)Id{
+	[DJHttp cancelRequest:Id];
+}`
+
+	webApiH += "\n@end"
+	webApiM += "\n@end"
+	ioutil.WriteFile("./webapi/WebAPI.h", []byte(webApiH), os.ModeAppend)
+	ioutil.WriteFile("./webapi/WebAPI.m", []byte(webApiM), os.ModeAppend)
 
 	fmt.Println(`————————————————————————success————————————————————————`)
 }

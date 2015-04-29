@@ -17,14 +17,14 @@
 @end
 
 @interface Ret_f2_ProductData:NSObject
-@property(nonatomic) NSString* r_PId;
-@property(nonatomic) NSString* r_PImage;
-@property(nonatomic) NSString* r_PCategoryCode;
-@property(nonatomic) NSInteger r_PCommentCount;
 @property(nonatomic) NSInteger r_PCommentIntegral;
 @property(nonatomic) NSString* r_PDescriptionUrl;
 @property(nonatomic) NSInteger r_PFavoriteCount;
 @property(nonatomic) NSInteger r_PGoodCommentCount;
+@property(nonatomic) NSString* r_PId;
+@property(nonatomic) NSString* r_PImage;
+@property(nonatomic) NSString* r_PCategoryCode;
+@property(nonatomic) NSInteger r_PCommentCount;
 +(Ret_f2_ProductData*)createWith:(NSDictionary*)dic;
 @end
 
@@ -33,20 +33,20 @@
 -(Ret_f2_ProductData*)objectAtIndexedSubscript:(NSUInteger)idx;
 @end
 
-@interface Ret_f1:NSObject
-@property(nonatomic) NSString* r_Image;
-@property(nonatomic) NSInteger r_IsUpdate;
-+(Ret_f1*)createWith:(NSDictionary*)dic;
-@end
-
 @interface Ret_f2:NSObject
-@property(nonatomic) Ret_f2_BrandData_Array* r_BrandData;
 @property(nonatomic) Ret_f2_ProductData_Array* r_ProductData;
+@property(nonatomic) Ret_f2_BrandData_Array* r_BrandData;
 +(Ret_f2*)createWith:(NSDictionary*)dic;
 @end
 
 @interface Ret_f2_Array:NSMutableArray
 +(Ret_f2_Array*)createWith:(NSArray*)arr;
 -(Ret_f2*)objectAtIndexedSubscript:(NSUInteger)idx;
+@end
+
+@interface Ret_f1:NSObject
+@property(nonatomic) NSInteger r_IsUpdate;
+@property(nonatomic) NSString* r_Image;
++(Ret_f1*)createWith:(NSDictionary*)dic;
 @end
 
