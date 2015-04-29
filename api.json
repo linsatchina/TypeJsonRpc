@@ -1,22 +1,26 @@
 {
-  "f1": {
+  "单个object_测试": {
     "path": "recommend/openmachine",
     "comment": "开机图片",
     "param": [],
     "method":"get",
     "respon_data": {
+      "comment":"字段注释1",
       "type": "object_array",
+      
       "key": {
         "IsUpdate": {
+          "comment":"字段注释2",
           "type": "int"
         },
         "Image": {
+          "comment":"字段注释3",
           "type": "string"
         }
       }
     }
   },
-  "f2": {
+  "多个object数组_测试": {
     "path": "products/list",
     "comment": "注释啊",
     "method": "post",
@@ -30,47 +34,61 @@
       "type": "object",
       "key": {
         "BrandData": {
+          "comment":"字段注释4",
           "type": "object_array",
           "key": {
             "BCount": {
+              "comment":"字段注释5",
               "type": "int"
             },
             "BId": {
+              "comment":"字段注释6",
               "type": "int"
             },
             "BName": {
+              "comment":"字段注释7",
               "type": "string"
             },
             "BPId": {
+              "comment":"字段注释8",
               "type": "string"
             }
           }
         },
         "ProductData": {
+          "comment":"字段注释9",
           "type": "object_array",
           "key": {
             "PCategoryCode": {
+              "comment":"字段注释10",
               "type": "string"
             },
             "PCommentCount": {
+              "comment":"字段注释11",
               "type": "int"
             },
             "PCommentIntegral": {
+              "comment":"字段注释12",
               "type": "int"
             },
             "PDescriptionUrl": {
+              "comment":"字段注释13",
               "type": "string"
             },
             "PFavoriteCount": {
+              "comment":"字段注释14",
               "type": "int"
             },
             "PGoodCommentCount": {
+              "comment":"字段注释15",
               "type": "int"
             },
             "PId": {
+              "comment":"字段注释16",
               "type": "string"
             },
             "PImage": {
+              "comment":"字段注释17",
               "type": "string"
             }
           }
