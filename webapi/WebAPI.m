@@ -15,8 +15,8 @@
 	[DJHttp cancelAllRequestWithId:Id];
 }
 #pragma -mark 开机图片
-+(void)f1:(id)Id
-onSuceess:(void(^)(Ret_f1_Array* ret))onSuceess
++(void)recommend_openmachine:(id)Id
+onSuceess:(void(^)(Ret_recommend_openmachine* ret))onSuceess
 onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
 {
 [DJHttp sendRequestWithId:Id
@@ -25,7 +25,7 @@ onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
 	param:@{}
 	onSuceess:^(id data){
 		if(onSuceess){
-			onSuceess([Ret_f1_Array createWith:data]);
+			onSuceess([Ret_recommend_openmachine createWith:data]);
 		}
 	}
 	onFailed:onFailed
@@ -33,12 +33,12 @@ onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
 }
 
 #pragma -mark 注释啊
-+(void)f2:(id)Id
++(void)products_list:(id)Id
 cate:(NSString*)cate
 page:(NSString*)page
 pagesize:(NSString*)pagesize
 sort:(NSString*)sort
-onSuceess:(void(^)(Ret_f2* ret))onSuceess
+onSuceess:(void(^)(Ret_products_list* ret))onSuceess
 onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
 {
 [DJHttp sendRequestWithId:Id
@@ -47,7 +47,7 @@ onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
 	param:@{@"cate":cate,@"page":page,@"pagesize":pagesize,@"sort":sort,}
 	onSuceess:^(id data){
 		if(onSuceess){
-			onSuceess([Ret_f2 createWith:data]);
+			onSuceess([Ret_products_list createWith:data]);
 		}
 	}
 	onFailed:onFailed
