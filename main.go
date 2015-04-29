@@ -33,6 +33,11 @@ var modelIsArray = make(map[string]bool)
 
 //var modelIsArray = make(map[类名]是否是数组)
 
+var sourceComment = `
+//DO NOT EDIT! 
+//source: api.json  main.go
+`
+
 func buildModel(modelName string, level int, data map[string]interface{}) bool {
 	t := data["type"]
 
@@ -66,28 +71,10 @@ func buildModel(modelName string, level int, data map[string]interface{}) bool {
 	return false
 }
 
-func modelArray(modelName string) string {
-	var s = ""
-	s += "@interface " + modelName + "_Array:NSMutableArray\n"
-	s += "-(" + modelName + "*)objectAtIndexedSubscript:(NSUInteger)idx;\n"
-	s += "@end\n"
-	s += "@implementation " + modelName + "_Array\n"
-	s += "-(" + modelName + " *)objectAtIndexedSubscript:(NSUInteger)idx{\n"
-	s += "return [super objectAtIndexedSubscript:idx];\n"
-	s += "}\n"
-	s += "@end\n\n"
-	return s
-}
-
 func main() {
-	//输出错误
-	defer func() {
-		if err := recover(); err != nil {
-			fmt.Println(`————————————————————————生成失败————————————————————————`, err)
-		}
-	}()
-	fmt.Println(`————————————————————————start————————————————————————`)
 
+	//第1步
+	//---------------------- api.json --> apiList ----------------------
 	d, _ := ioutil.ReadFile(`./api.json`)
 	err := json.Unmarshal(d, &apiList)
 	if err != nil {
@@ -95,35 +82,49 @@ func main() {
 		return
 	}
 
+	//第2步
+	//---------------------- apiList --> modelArr modelIsArray----------------------
 	for funcName, api := range apiList {
-		//fmt.Println(`————————————————————————`, funcName, `————————————————————————`)
 		buildModel("Ret_"+funcName, 0, api.Respon_data)
 	}
 
-	var s = ""
+	//第3步
+	//---------------------- modelArr modelIsArray --> objectice-c code ----------------------
+	var hStr = sourceComment + `#import <Foundation/Foundation.h>` + "\n\n"
+	var mStr = sourceComment + `#import "WebAPI_model.h"` + "\n\n"
 	for i := 9; i >= 0; i-- {
 		m := modelArr[i]
 		for k, v := range m {
 
-			s += "@interface " + k + ":NSObject\n"
+			hStr += "@interface " + k + ":NSObject\n"
 			for _name_, _type_ := range v {
 				if modelIsArray[_type_] {
-					s += "@property(nonatomic) " + _type_ + "_Array r_" + _name_ + ";\n"
+					hStr += "@property(nonatomic) " + _type_ + "_Array r_" + _name_ + ";\n"
 				} else {
-					s += "@property(nonatomic) " + _type_ + " r_" + _name_ + ";\n"
+					hStr += "@property(nonatomic) " + _type_ + " r_" + _name_ + ";\n"
 				}
 			}
-			s += "@end\n"
-			s += "@implementation " + k + "\n@end\n\n"
+			hStr += "@end\n\n"
+
+			mStr += "@implementation " + k + "\n@end\n\n"
 
 			if modelIsArray[k] {
-				s += modelArray(k)
+				hStr += "@interface " + k + "_Array:NSMutableArray\n"
+				hStr += "-(" + k + "*)objectAtIndexedSubscript:(NSUInteger)idx;\n"
+				hStr += "@end\n\n"
+
+				mStr += "@implementation " + k + "_Array\n"
+				mStr += "-(" + k + " *)objectAtIndexedSubscript:(NSUInteger)idx{\n"
+				mStr += "return [super objectAtIndexedSubscript:idx];\n"
+				mStr += "}\n"
+				mStr += "@end\n\n"
 			}
 
 		}
 	}
 
-	ioutil.WriteFile("./test.h", []byte(s), os.ModeAppend)
+	ioutil.WriteFile("./webapi/WebAPI_model.h", []byte(hStr), os.ModeAppend)
+	ioutil.WriteFile("./webapi/WebAPI_model.m", []byte(mStr), os.ModeAppend)
 
 	fmt.Println(`————————————————————————success————————————————————————`)
 }
