@@ -23,10 +23,16 @@ type API struct {
 	Respon_data map[string]interface{}
 }
 
-var apiList map[string]API
-var modelArr = make([]map[string]map[string]string, 10)
+//参数
+type RetParam struct {
+	Type    string
+	Comment string
+}
 
-//var modelArr = make([级数]map[类名]map[属性名]类型, 10)
+var apiList map[string]API
+var modelArr = make([]map[string]map[string]*RetParam, 10)
+
+//var modelArr = make([级数]map[类名]map[属性名]*RetParam, 10)
 
 var modelIsArray = make(map[string]bool)
 
@@ -60,10 +66,11 @@ func getType(t string) string {
 }
 
 //object create实现函数
-func getObjectCreateWithSourceStr(_type string, name_type_map map[string]string) string {
+func getObjectCreateWithSourceStr(_type string, name_type_map map[string]*RetParam) string {
 
 	var s = ``
-	for name, type_ := range name_type_map {
+	for name, retParam := range name_type_map {
+		type_ := retParam.Type
 		if type_ == ParamType_Float {
 			s += `{
 	NSNumber *n=dic[@"` + name + `"];
@@ -152,20 +159,24 @@ func buildModel(modelName string, level int, data map[string]interface{}) bool {
 			_data := vvv.(map[string]interface{})
 			hasChild := buildModel(modelName+"_"+name, level+1, _data)
 			paramType := _data["type"].(string)
+			comment := _data["comment"].(string)
 			if hasChild {
 				paramType = modelName + "_" + name
 			}
 
 			if modelArr[level] == nil {
-				modelArr[level] = make(map[string]map[string]string)
+				modelArr[level] = make(map[string]map[string]*RetParam)
 			}
 
 			if modelArr[level][modelName] == nil {
-				modelArr[level][modelName] = make(map[string]string)
+				modelArr[level][modelName] = make(map[string]*RetParam)
 			}
 
 			modelIsArray[modelName] = _type == ParamType_ObjectArray
-			modelArr[level][modelName][name] = paramType
+			modelArr[level][modelName][name] = &RetParam{
+				Type:    paramType,
+				Comment: comment,
+			}
 		}
 		return true
 	}
@@ -198,8 +209,8 @@ func main() {
 		for modelName, v := range m {
 
 			hStr += "@interface " + modelName + ":NSObject\n"
-			for _name_, paramType := range v {
-
+			for _name_, retParam := range v {
+				paramType := retParam.Type
 				if paramType == ParamType_String {
 					paramType = "NSString*"
 				} else if paramType == ParamType_Int {
@@ -212,7 +223,7 @@ func main() {
 					paramType = paramType + "*"
 				}
 
-				hStr += "@property(nonatomic) " + paramType + " r_" + _name_ + ";\n"
+				hStr += "@property(nonatomic) " + paramType + " r_" + _name_ + ";//" + retParam.Comment + "\n"
 			}
 			hStr += "+(" + modelName + "*)createWith:(id)Id;\n"
 			hStr += "@end\n\n"
@@ -242,7 +253,7 @@ func main() {
 	ioutil.WriteFile("./webapi/WebAPI_model.m", []byte(mStr), os.ModeAppend)
 
 	//第4步
-	//---------------------- modelArr modelIsArray --> objectice-c webapi code ----------------------
+	//---------------------- apiList --> objectice-c webapi code ----------------------
 
 	var webApiH = sourceComment + `
 #import "WebAPI_model.h"
