@@ -33,7 +33,7 @@
 }
 
 
-+(void)cancelRequest:(id)Id{
++(void)cancelAllRequestWithId:(id)Id{
 
 }
 

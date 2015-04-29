@@ -15,6 +15,6 @@
             onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed;
 
 //取消 id 所有
-+(void)cancelRequest:(id)Id;
++(void)cancelAllRequestWithId:(id)Id;
 
 @end
