@@ -17,6 +17,7 @@ const (
 
 type API struct {
 	Path        string
+	Method      string
 	Comment     string
 	Param       []string
 	Respon_data map[string]interface{}
@@ -97,6 +98,41 @@ func getObjectCreateWithSourceStr(_type string, name_type_map map[string]string)
 	}` + s + `
 	return ret;
 `
+}
+
+func getWebApiFuncH(comment string, funcName string, paramArr []string, retType string) string {
+	var p = "\n"
+	for _, param := range paramArr {
+		p += param + ":(NSString*)" + param + "\n"
+	}
+	var s = `
+#pragma -mark ` + comment + `
++(void)` + funcName + `:(id)Id` + p + `onSuceess:(void(^)(` + retType + `* ret))onSuceess
+onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
+`
+	return s
+}
+
+func getWebApiFuncM(method, path string, paramArr []string, retType string) string {
+	var p = "@{"
+	for _, param := range paramArr {
+		p += `@"` + param + `":` + param + ","
+	}
+	p += "}"
+	var s = `
+[DJHttp sendRequestWithId:Id
+	method:method
+	path:path
+	param:` + p + `
+	onSuceess:^(id data){
+		if(onSuceess){
+			onSuceess([` + retType + ` createWith:data]);
+		}
+	}
+	onFailed:onFailed
+];
+`
+	return s
 }
 
 func buildModel(modelName string, level int, data map[string]interface{}) bool {
@@ -230,6 +266,15 @@ func main() {
 +(void)cancelRequest:(id)Id{
 	[DJHttp cancelRequest:Id];
 }`
+
+	for funcName, api := range apiList {
+		retType := `Ret_` + funcName
+		if modelIsArray[retType] {
+			retType += `_Array`
+		}
+		webApiH += getWebApiFuncH(api.Comment, funcName, api.Param, retType) + ";\n"
+		webApiM += getWebApiFuncH(api.Comment, funcName, api.Param, retType) + "{" + getWebApiFuncM(api.Method, api.Path, api.Param, retType) + "}\n"
+	}
 
 	webApiH += "\n@end"
 	webApiM += "\n@end"

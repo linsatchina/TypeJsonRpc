@@ -3,8 +3,9 @@
     "path": "recommend/openmachine",
     "comment": "开机图片",
     "param": [],
+    "method":"get",
     "respon_data": {
-      "type": "object",
+      "type": "object_array",
       "key": {
         "IsUpdate": {
           "type": "int"
@@ -26,7 +27,7 @@
       "sort"
     ],
     "respon_data": {
-      "type": "object_array",
+      "type": "object",
       "key": {
         "BrandData": {
           "type": "object_array",
