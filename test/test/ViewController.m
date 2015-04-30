@@ -23,7 +23,7 @@
         if (ret.r_BrandData.count>0) {
             NSLog(@"ret.r_BrandData[0].r_BName=%@",ret.r_BrandData[0].r_BName);
         }
-    } onFailed:^(enum WebAPIErrorCode errorCode, NSString *msg) {
+    } onFailed:^(enum WebAPIStatus errorCode, NSString *msg) {
         NSLog(@"errorCode=%ld msg=%@",errorCode,msg);
     }];
 }

@@ -261,7 +261,7 @@ func main() {
 
 @interface WebAPI : NSObject
 //
-+(void)registerstatus:(enum WebAPIStatus)status block:(void(^)())block;
++(void)registerStatus:(enum WebAPIStatus)status block:(void(^)())block;
 //
 //取消Id发起的所有网络请求
 //回收所有block
@@ -278,8 +278,8 @@ func main() {
 
 @implementation WebAPI
 
-+(void)registerstatus:(enum WebAPIStatus)status block:(void(^)())block{
-	[DJHttp registerstatus:status block:block];
++(void)registerStatus:(enum WebAPIStatus)status block:(void(^)())block{
+	[DJHttp registerStatus:status block:block];
 }
 
 +(void)cancelAllRequestWithId:(id)Id{

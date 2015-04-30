@@ -4,7 +4,7 @@
 @interface DJHttp : NSObject
 
 //全局事件注册
-+(void)registerErrorCode:(enum WebAPIStatus)status block:(void(^)())block;
++(void)registerStatus:(enum WebAPIStatus)status block:(void(^)())block;
 
 //id + path + method 相同    取消上次
 +(void)sendRequestWithId:(id)Id

@@ -14,9 +14,9 @@
 		A07EDD151AF0A4A4003F9E57 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07EDD141AF0A4A4003F9E57 /* Images.xcassets */; };
 		A07EDD181AF0A4A4003F9E57 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A07EDD161AF0A4A4003F9E57 /* LaunchScreen.xib */; };
 		A07EDD241AF0A4A4003F9E57 /* testTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A07EDD231AF0A4A4003F9E57 /* testTests.m */; };
-		A09B519D1AF0A4CE0097656B /* DJHttp.m in Sources */ = {isa = PBXBuildFile; fileRef = A09B51971AF0A4CE0097656B /* DJHttp.m */; };
-		A09B519E1AF0A4CE0097656B /* WebAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = A09B51991AF0A4CE0097656B /* WebAPI.m */; };
-		A09B519F1AF0A4CE0097656B /* WebAPI_model.m in Sources */ = {isa = PBXBuildFile; fileRef = A09B519B1AF0A4CE0097656B /* WebAPI_model.m */; };
+		A0A50BBC1AF1F5FA004EFCCF /* DJHttp.m in Sources */ = {isa = PBXBuildFile; fileRef = A0A50BB61AF1F5FA004EFCCF /* DJHttp.m */; };
+		A0A50BBD1AF1F5FA004EFCCF /* WebAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = A0A50BB81AF1F5FA004EFCCF /* WebAPI.m */; };
+		A0A50BBE1AF1F5FA004EFCCF /* WebAPI_model.m in Sources */ = {isa = PBXBuildFile; fileRef = A0A50BBA1AF1F5FA004EFCCF /* WebAPI_model.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,13 +43,13 @@
 		A07EDD1D1AF0A4A4003F9E57 /* testTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = testTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07EDD221AF0A4A4003F9E57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A07EDD231AF0A4A4003F9E57 /* testTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = testTests.m; sourceTree = "<group>"; };
-		A09B51961AF0A4CE0097656B /* DJHttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJHttp.h; sourceTree = "<group>"; };
-		A09B51971AF0A4CE0097656B /* DJHttp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DJHttp.m; sourceTree = "<group>"; };
-		A09B51981AF0A4CE0097656B /* WebAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebAPI.h; sourceTree = "<group>"; };
-		A09B51991AF0A4CE0097656B /* WebAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebAPI.m; sourceTree = "<group>"; };
-		A09B519A1AF0A4CE0097656B /* WebAPI_model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebAPI_model.h; sourceTree = "<group>"; };
-		A09B519B1AF0A4CE0097656B /* WebAPI_model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebAPI_model.m; sourceTree = "<group>"; };
-		A09B519C1AF0A4CE0097656B /* WebAPIErrorCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebAPIErrorCode.h; sourceTree = "<group>"; };
+		A0A50BB51AF1F5FA004EFCCF /* DJHttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJHttp.h; sourceTree = "<group>"; };
+		A0A50BB61AF1F5FA004EFCCF /* DJHttp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DJHttp.m; sourceTree = "<group>"; };
+		A0A50BB71AF1F5FA004EFCCF /* WebAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebAPI.h; sourceTree = "<group>"; };
+		A0A50BB81AF1F5FA004EFCCF /* WebAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebAPI.m; sourceTree = "<group>"; };
+		A0A50BB91AF1F5FA004EFCCF /* WebAPI_model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebAPI_model.h; sourceTree = "<group>"; };
+		A0A50BBA1AF1F5FA004EFCCF /* WebAPI_model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebAPI_model.m; sourceTree = "<group>"; };
+		A0A50BBB1AF1F5FA004EFCCF /* WebAPIStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebAPIStatus.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,7 +73,7 @@
 		A07EDCFB1AF0A4A3003F9E57 = {
 			isa = PBXGroup;
 			children = (
-				A09B51951AF0A4CE0097656B /* webapi */,
+				A0A50BB41AF1F5FA004EFCCF /* webapi */,
 				A07EDD061AF0A4A4003F9E57 /* test */,
 				A07EDD201AF0A4A4003F9E57 /* testTests */,
 				A07EDD051AF0A4A4003F9E57 /* Products */,
@@ -130,16 +130,16 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		A09B51951AF0A4CE0097656B /* webapi */ = {
+		A0A50BB41AF1F5FA004EFCCF /* webapi */ = {
 			isa = PBXGroup;
 			children = (
-				A09B51961AF0A4CE0097656B /* DJHttp.h */,
-				A09B51971AF0A4CE0097656B /* DJHttp.m */,
-				A09B51981AF0A4CE0097656B /* WebAPI.h */,
-				A09B51991AF0A4CE0097656B /* WebAPI.m */,
-				A09B519A1AF0A4CE0097656B /* WebAPI_model.h */,
-				A09B519B1AF0A4CE0097656B /* WebAPI_model.m */,
-				A09B519C1AF0A4CE0097656B /* WebAPIErrorCode.h */,
+				A0A50BB51AF1F5FA004EFCCF /* DJHttp.h */,
+				A0A50BB61AF1F5FA004EFCCF /* DJHttp.m */,
+				A0A50BB71AF1F5FA004EFCCF /* WebAPI.h */,
+				A0A50BB81AF1F5FA004EFCCF /* WebAPI.m */,
+				A0A50BB91AF1F5FA004EFCCF /* WebAPI_model.h */,
+				A0A50BBA1AF1F5FA004EFCCF /* WebAPI_model.m */,
+				A0A50BBB1AF1F5FA004EFCCF /* WebAPIStatus.h */,
 			);
 			name = webapi;
 			path = ../webapi;
@@ -245,11 +245,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A09B519E1AF0A4CE0097656B /* WebAPI.m in Sources */,
 				A07EDD101AF0A4A4003F9E57 /* ViewController.m in Sources */,
-				A09B519D1AF0A4CE0097656B /* DJHttp.m in Sources */,
-				A09B519F1AF0A4CE0097656B /* WebAPI_model.m in Sources */,
 				A07EDD0D1AF0A4A4003F9E57 /* AppDelegate.m in Sources */,
+				A0A50BBD1AF1F5FA004EFCCF /* WebAPI.m in Sources */,
+				A0A50BBE1AF1F5FA004EFCCF /* WebAPI_model.m in Sources */,
+				A0A50BBC1AF1F5FA004EFCCF /* DJHttp.m in Sources */,
 				A07EDD0A1AF0A4A4003F9E57 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

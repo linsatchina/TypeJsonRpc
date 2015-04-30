@@ -18,7 +18,7 @@
 @implementation DJHttp
 
 
-+(void)registerErrorCode:(enum WebAPIErrorCode)status block:(void(^)())block{
++(void)registerStatus:(enum WebAPIStatus)status block:(void(^)())block{
 
 }
 
@@ -28,7 +28,7 @@
             path:(NSString*)path
             param:(NSDictionary*)param
             onSuceess:(void(^)(id data))onSuceess
-            onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed{
+            onFailed:(void(^)(enum WebAPIStatus errorCode,NSString* msg))onFailed{
 
 }
 
