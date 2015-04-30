@@ -7,8 +7,8 @@
 
 @implementation WebAPI
 
-+(void)registerErrorCode:(enum WebAPIErrorCode)status block:(void(^)())block{
-	[DJHttp registerErrorCode:status block:block];
++(void)registerstauts:(enum WebAPIStauts)status block:(void(^)())block{
+	[DJHttp registerstauts:status block:block];
 }
 
 +(void)cancelAllRequestWithId:(id)Id{
@@ -17,7 +17,7 @@
 #pragma -mark 开机图片
 +(void)recommend_openmachine:(id)Id
 onSuceess:(void(^)(Ret_recommend_openmachine* ret))onSuceess
-onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
+onFailed:(void(^)(enum WebAPIStauts stauts,NSString* msg))onFailed
 {
 [DJHttp sendRequestWithId:Id
 	method:@"get"
@@ -39,7 +39,7 @@ page:(NSString*)page
 pagesize:(NSString*)pagesize
 sort:(NSString*)sort
 onSuceess:(void(^)(Ret_products_list* ret))onSuceess
-onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
+onFailed:(void(^)(enum WebAPIStauts stauts,NSString* msg))onFailed
 {
 [DJHttp sendRequestWithId:Id
 	method:@"post"
