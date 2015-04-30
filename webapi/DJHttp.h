@@ -3,17 +3,18 @@
 
 @interface DJHttp : NSObject
 
-+(void)registerStatus:(enum WebAPIStatus)status block:(void(^)())block;
+//全局事件注册
++(void)registerErrorCode:(enum WebAPIStatus)status block:(void(^)())block;
 
-//id   path+method  相同取消上次
-+(void)callhttpReguest:(id)Id
-                  path:(NSString*)funcName
-                method:(NSString*)method
-                 param:(NSDictionary*)param
-             onSuceess:(void(^)(NSArray* retArr))onSuceess
-              onFailed:(void(^)(enum WebAPIStatus status,NSString* msg))onFailed;
+//id + path + method 相同    取消上次
++(void)sendRequestWithId:(id)Id
+                  method:(NSString*)method
+                    path:(NSString*)path
+                   param:(NSDictionary*)param
+               onSuceess:(void(^)(id data))onSuceess
+                onFailed:(void(^)(enum WebAPIStatus errorCode,NSString* msg))onFailed;
 
-//  取消 id 所有
-+(void)cancelRequest:(id)Id;
+//取消 id 所有
++(void)cancelAllRequestWithId:(id)Id;
 
 @end
