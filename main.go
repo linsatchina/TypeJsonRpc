@@ -46,10 +46,10 @@ func writeFile(filename, data string) {
 }
 
 func templateStrExecute(str string, data interface{}) string {
-	bArr := bytes.NewBuffer(make([]byte, 1024))
+	bArr := bytes.NewBuffer(nil)
 	ht, _ := template.New(`name`).Parse(str)
 	ht.Execute(bArr, data)
-	return string(bArr.Bytes())
+	return bArr.String()
 }
 
 var sourceComment = `
