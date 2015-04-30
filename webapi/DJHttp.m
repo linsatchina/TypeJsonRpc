@@ -45,7 +45,7 @@ NSMutableDictionary *httpDic;
 }
 
 
-+(void)callBlock:(enum WebAPIErrorCode)status{
++(void)callBlock:(enum WebAPIStatus)status{
     if (status>=NetWorkError && status<=____end____) {
         void(^block)() = blockArray[status];
         if (block) {
@@ -55,7 +55,7 @@ NSMutableDictionary *httpDic;
 }
 
 
-+(void)registerStatus:(enum WebAPIErrorCode)status block:(void(^)())block{
++(void)registerStatus:(enum WebAPIStatus)status block:(void(^)())block{
     blockArray[status] = block;
 }
 
@@ -67,7 +67,7 @@ NSMutableDictionary *httpDic;
            param:(NSDictionary *)param
 filesPathNameDic:(NSDictionary *)filesNameDic
          success:(void (^)(id data))success
-          failed:(void(^)(enum WebAPIErrorCode status,NSString* msg))onFailed
+          failed:(void(^)(enum WebAPIStatus status,NSString* msg))onFailed
 
 {
     [DJHttp loadCookies];
@@ -93,7 +93,7 @@ filesPathNameDic:(NSDictionary *)filesNameDic
             }
         }else{
             if (onFailed) {
-                enum WebAPIErrorCode s;
+                enum WebAPIStatus s;
                 NSNumber* n=[responseObject objectForKey:@"Status"];
                 s=[n intValue];
                 
@@ -173,7 +173,7 @@ filesPathNameDic:(NSDictionary *)filesNameDic
          method:(NSString*)method
           param:(NSDictionary*)param
       onSuceess:(void(^)(NSArray* retArr))onSuceess
-       onFailed:(void(^)(enum WebAPIErrorCode status,NSString* msg))onFailed
+       onFailed:(void(^)(enum WebAPIStatus status,NSString* msg))onFailed
 {
      method=[method uppercaseString];
     [DJHttp callPath:funcName prefixAdress:@"http://appapi.chinacloudsites.cn/"  method:method param:param filesPathNameDic:nil success:onSuceess failed:onFailed];
@@ -188,7 +188,7 @@ filesPathNameDic:(NSDictionary *)filesNameDic
           param:(NSDictionary *)param
 filesPathNameDic:(NSDictionary *)filesNameDic
         success:(void (^)(id data))success
-         failed:(void(^)(enum WebAPIErrorCode status,NSString* msg))onFailed
+         failed:(void(^)(enum WebAPIStatus status,NSString* msg))onFailed
 
 {
     [DJHttp loadCookies];
@@ -214,7 +214,7 @@ filesPathNameDic:(NSDictionary *)filesNameDic
             }
         }else{
             if (onFailed) {
-                enum WebAPIErrorCode s;
+                enum WebAPIStatus s;
                 NSNumber* n=[responseObject objectForKey:@"Status"];
                 s=[n intValue];
                 
@@ -338,7 +338,7 @@ filesPathNameDic:(NSDictionary *)filesNameDic
          method:(NSString*)method
           param:(NSDictionary*)param
       onSuceess:(void(^)(NSArray* retArr))onSuceess
-       onFailed:(void(^)(enum WebAPIErrorCode status,NSString* msg))onFailed
+       onFailed:(void(^)(enum WebAPIStatus status,NSString* msg))onFailed
 {
     
     
