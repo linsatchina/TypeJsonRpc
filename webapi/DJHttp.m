@@ -62,12 +62,12 @@ NSMutableDictionary *httpDic;
 
 
 +(void)callPath:(NSString *)met
-    prefixAdress:(NSString *)prefixAddress
+   prefixAdress:(NSString *)prefixAddress
          method:(NSString *)method
-           param:(NSDictionary *)param
+          param:(NSDictionary *)param
 filesPathNameDic:(NSDictionary *)filesNameDic
-         success:(void (^)(id data))success
-          failed:(void(^)(enum WebAPIStatus status,NSString* msg))onFailed
+        success:(void (^)(id data))success
+         failed:(void(^)(enum WebAPIStatus status,NSString* msg))onFailed
 
 {
     [DJHttp loadCookies];
@@ -106,7 +106,7 @@ filesPathNameDic:(NSDictionary *)filesNameDic
         
     };
     if ([method isEqualToString:@"GET"]) {
-         
+        
         [manager GET:[NSString stringWithFormat:@"%@%@",prefixAddress,met] parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             commonSuccess(operation,responseObject);
@@ -137,7 +137,7 @@ filesPathNameDic:(NSDictionary *)filesNameDic
     
     if(fileParam.count==0){
         
-       [manager POST:[NSString stringWithFormat:@"%@%@",prefixAddress,met] parameters:textParam success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [manager POST:[NSString stringWithFormat:@"%@%@",prefixAddress,met] parameters:textParam success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             commonSuccess(operation,responseObject);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -146,26 +146,26 @@ filesPathNameDic:(NSDictionary *)filesNameDic
         
         
     }else{
-    
-    [manager POST:[NSString stringWithFormat:@"%@%@",prefixAddress,met] parameters:textParam constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         
-        
+        [manager POST:[NSString stringWithFormat:@"%@%@",prefixAddress,met] parameters:textParam constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+            
+            
             [fileParam enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
                 //NSLog(@"key=%@,%d",key,((NSData*)obj).length);
-               // [formData appendPartWithFormData:obj name:key];
+                // [formData appendPartWithFormData:obj name:key];
                 [formData appendPartWithFileData:obj
                                             name:key
                                         fileName:@"" mimeType:@"image/jpeg"];
             }];
-        
-        
-    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        commonSuccess(operation,responseObject);
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        commonNetWrokErr(operation,error);
-    }];
+            
+            
+        } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            commonSuccess(operation,responseObject);
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            commonNetWrokErr(operation,error);
+        }];
         
     }
 }
@@ -175,20 +175,20 @@ filesPathNameDic:(NSDictionary *)filesNameDic
       onSuceess:(void(^)(NSArray* retArr))onSuceess
        onFailed:(void(^)(enum WebAPIStatus status,NSString* msg))onFailed
 {
-     method=[method uppercaseString];
+    method=[method uppercaseString];
     [DJHttp callPath:funcName prefixAdress:@"http://appapi.chinacloudsites.cn/"  method:method param:param filesPathNameDic:nil success:onSuceess failed:onFailed];
 }
 
 
 
 +(void)callhttpReguest:(id)Id
-   path:(NSString *)met
-   prefixAdress:(NSString *)prefixAddress
-         method:(NSString *)method
-          param:(NSDictionary *)param
-filesPathNameDic:(NSDictionary *)filesNameDic
-        success:(void (^)(id data))success
-         failed:(void(^)(enum WebAPIStatus status,NSString* msg))onFailed
+                  path:(NSString *)met
+          prefixAdress:(NSString *)prefixAddress
+                method:(NSString *)method
+                 param:(NSDictionary *)param
+      filesPathNameDic:(NSDictionary *)filesNameDic
+               success:(void (^)(id data))success
+                failed:(void(^)(enum WebAPIStatus status,NSString* msg))onFailed
 
 {
     [DJHttp loadCookies];
@@ -238,7 +238,7 @@ filesPathNameDic:(NSDictionary *)filesNameDic
                 commonSuccess(operation,responseObject);
             }
             
-                
+            
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"AFHTTPRequestOperation failure \n");
@@ -248,7 +248,7 @@ filesPathNameDic:(NSDictionary *)filesNameDic
                 commonNetWrokErr(operation,error);
             }
             
-                
+            
             
         }];
         NSLog(@"add httpRequest\n");
@@ -284,19 +284,19 @@ filesPathNameDic:(NSDictionary *)filesNameDic
                 [httpDic removeObjectForKey:key];
                 commonSuccess(operation,responseObject);
             }
-
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
+            
             if ([httpDic objectForKey:key]) {
                 [httpDic removeObjectForKey:key];
                 commonNetWrokErr(operation,error);
             }
         }];
         
-      
-      
+        
+        
         [httpDic setObject:httpRequest forKey:key];
-    
+        
     }else{
         
         AFHTTPRequestOperation *httpRequest= [manager POST:[NSString stringWithFormat:@"%@%@",prefixAddress,met] parameters:textParam constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
@@ -312,7 +312,7 @@ filesPathNameDic:(NSDictionary *)filesNameDic
             
             
         } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-             NSLog(@"AFHTTPRequestOperation success \n");
+            NSLog(@"AFHTTPRequestOperation success \n");
             
             if ([httpDic objectForKey:key])
             {
@@ -330,15 +330,15 @@ filesPathNameDic:(NSDictionary *)filesNameDic
         
         
         [httpDic setObject:httpRequest forKey:key];
-      
+        
     }
 }
 +(void)callhttpReguest:(id)Id
-     path:(NSString*)funcName
-         method:(NSString*)method
-          param:(NSDictionary*)param
-      onSuceess:(void(^)(NSArray* retArr))onSuceess
-       onFailed:(void(^)(enum WebAPIStatus status,NSString* msg))onFailed
+                  path:(NSString*)funcName
+                method:(NSString*)method
+                 param:(NSDictionary*)param
+             onSuceess:(void(^)(NSArray* retArr))onSuceess
+              onFailed:(void(^)(enum WebAPIStatus status,NSString* msg))onFailed
 {
     
     
@@ -367,7 +367,7 @@ filesPathNameDic:(NSDictionary *)filesNameDic
     }
     
     NSString *key=[NSString stringWithFormat:@"%p:%@/%@",Id,funcName,method];
- 
+    
     if ([httpDic objectForKey:key]) {
         AFHTTPRequestOperation *httpRequest=[httpDic objectForKey:key];
         [httpRequest cancel];
@@ -375,13 +375,13 @@ filesPathNameDic:(NSDictionary *)filesNameDic
         [httpDic removeObjectForKey:key];
         NSLog(@"remove httpRequest\n");
     }
-   
+    
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         [DJHttp callhttpReguest:Id path: funcName prefixAdress:@"http://appapi.chinacloudsites.cn/"  method:[method uppercaseString] param:param   filesPathNameDic:nil  success:onSuceess failed:onFailed];
     });
-   
+    
 }
 
 
