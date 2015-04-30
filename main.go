@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"text/template"
 )
 
 const (
@@ -38,6 +40,18 @@ var modelIsArray = make(map[string]bool)
 
 //var modelIsArray = make(map[类名]是否是数组)
 
+func writeFile(filename, data string) {
+	out, _ := os.Create(filename)
+	out.WriteString(data)
+}
+
+func templateStrExecute(str string, data interface{}) string {
+	bArr := bytes.NewBuffer(make([]byte, 1024))
+	ht, _ := template.New(`name`).Parse(str)
+	ht.Execute(bArr, data)
+	return string(bArr.Bytes())
+}
+
 var sourceComment = `
 //DO NOT EDIT! 
 //source: api.json  main.go
@@ -45,19 +59,24 @@ var sourceComment = `
 
 //array create实现函数
 func getArrayCreateWithSourceStr(_type string) string {
-	return `
+	str := `
 	NSArray *arr=Id;
-	` + _type + `_Array *ret = (` + _type + `_Array*)[[NSMutableArray alloc]init];
+	{{.type}}_Array *ret = ({{.type}}_Array*)[[NSMutableArray alloc]init];
 	if(arr==nil || [arr isKindOfClass:[NSArray class]]==NO){
 		return ret;
 	}
 	for(int i=0;i<arr.count;i++){
-	    ` + _type + ` *model = [` + _type + ` createWith:arr[i]];
+	    {{.type}} *model = [{{.type}} createWith:arr[i]];
 		[ret addObject:model];
 	}
 	return ret;
 `
+	data := map[string]string{
+		`type`: _type,
+	}
+	return templateStrExecute(str, data)
 }
+
 func getType(t string) string {
 	if modelIsArray[t] {
 		return t + `_Array`
@@ -249,8 +268,8 @@ func main() {
 		}
 	}
 
-	ioutil.WriteFile("./webapi/WebAPI_model.h", []byte(hStr), os.ModeAppend)
-	ioutil.WriteFile("./webapi/WebAPI_model.m", []byte(mStr), os.ModeAppend)
+	writeFile("./webapi/WebAPI_model.h", hStr)
+	writeFile("./webapi/WebAPI_model.m", mStr)
 
 	//第4步
 	//---------------------- apiList --> objectice-c webapi code ----------------------
@@ -294,8 +313,8 @@ func main() {
 
 	webApiH += "\n@end"
 	webApiM += "\n@end"
-	ioutil.WriteFile("./webapi/WebAPI.h", []byte(webApiH), os.ModeAppend)
-	ioutil.WriteFile("./webapi/WebAPI.m", []byte(webApiM), os.ModeAppend)
+	writeFile("./webapi/WebAPI.h", webApiH)
+	writeFile("./webapi/WebAPI.m", webApiM)
 
 	fmt.Println(`————————————————————————success————————————————————————`)
 }
