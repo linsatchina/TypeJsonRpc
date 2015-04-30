@@ -123,7 +123,7 @@ func getWebApiFuncH(comment string, funcName string, paramArr []string, retType 
 	var s = `
 #pragma -mark ` + comment + `
 +(void)` + funcName + `:(id)Id` + p + `onSuceess:(void(^)(` + retType + `* ret))onSuceess
-onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
+onFailed:(void(^)(enum WebAPIStauts stauts,NSString* msg))onFailed
 `
 	return s
 }
@@ -257,11 +257,11 @@ func main() {
 
 	var webApiH = sourceComment + `
 #import "WebAPI_model.h"
-#import "WebAPIErrorCode.h"
+#import "WebAPIStauts.h"
 
 @interface WebAPI : NSObject
 //
-+(void)registerErrorCode:(enum WebAPIErrorCode)status block:(void(^)())block;
++(void)registerstauts:(enum WebAPIStauts)status block:(void(^)())block;
 //
 //取消Id发起的所有网络请求
 //回收所有block
@@ -278,8 +278,8 @@ func main() {
 
 @implementation WebAPI
 
-+(void)registerErrorCode:(enum WebAPIErrorCode)status block:(void(^)())block{
-	[DJHttp registerErrorCode:status block:block];
++(void)registerstauts:(enum WebAPIStauts)status block:(void(^)())block{
+	[DJHttp registerstauts:status block:block];
 }
 
 +(void)cancelAllRequestWithId:(id)Id{

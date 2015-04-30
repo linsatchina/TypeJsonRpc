@@ -3,11 +3,11 @@
 //source: api.json  main.go
 
 #import "WebAPI_model.h"
-#import "WebAPIErrorCode.h"
+#import "WebAPIStauts.h"
 
 @interface WebAPI : NSObject
 //
-+(void)registerErrorCode:(enum WebAPIErrorCode)status block:(void(^)())block;
++(void)registerstauts:(enum WebAPIStauts)status block:(void(^)())block;
 //
 //取消Id发起的所有网络请求
 //回收所有block
@@ -20,7 +20,7 @@
 #pragma -mark 开机图片
 +(void)recommend_openmachine:(id)Id
 onSuceess:(void(^)(Ret_recommend_openmachine* ret))onSuceess
-onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
+onFailed:(void(^)(enum WebAPIStauts stauts,NSString* msg))onFailed
 ;
 
 #pragma -mark 注释啊
@@ -30,7 +30,7 @@ page:(NSString*)page
 pagesize:(NSString*)pagesize
 sort:(NSString*)sort
 onSuceess:(void(^)(Ret_products_list* ret))onSuceess
-onFailed:(void(^)(enum WebAPIErrorCode errorCode,NSString* msg))onFailed
+onFailed:(void(^)(enum WebAPIStauts stauts,NSString* msg))onFailed
 ;
 
 @end
